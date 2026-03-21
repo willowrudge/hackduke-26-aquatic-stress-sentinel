@@ -12,9 +12,6 @@ Detected stressors include:
 | Harmful Algal Bloom | Freshwater, Marine | >24°C |
 | Coral Bleaching | Marine | >1°C above seasonal baseline |
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
 ## Installation
 **Requirements:**
 - Python 3.10+
@@ -77,15 +74,6 @@ streamlit run webapp.py
 - **Expanded sensor suite** — pH, turbidity, and chlorophyll sensors for deeper water quality analysis
 - **Calibrated thermal correction** — refine the boundary layer correction against a submerged reference sensor
 
-## Contributing
-This project was built as a hackathon prototype and we welcome contributions. If you'd like to contribute:
-
-Fork the repository
-Create a feature branch (git checkout -b feature/your-feature)
-Commit your changes and open a pull request
-
-Please open an issue first to discuss major changes.
-
 ## Team
 Built at HackDuke: Code For Good 2026
 
@@ -93,10 +81,7 @@ Built at HackDuke: Code For Good 2026
 - **Niko Weaver** — Hardware, drone build, firmware
 
 ## Authors and acknowledgment
-Big thank you to HackDuke for organizing and to NOAA and USGS for providing free public APIs that made the baseline comparison system possible.
+Thank you to HackDuke for organizing and to NOAA and USGS for providing free public APIs that made the baseline comparison system possible.
 
 ## License
 MIT License — free to use, modify, and build on.
-
-## Project status
-Actively developed as a hackathon prototype. Core functionality is complete: stressor detection, NOAA baseline comparison, and boundary layer thermal correction are all working.
