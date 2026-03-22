@@ -1,6 +1,6 @@
 pandas
 requests
-streamlit==1.35.0
+streamlit
 folium
 streamlit-folium
-altair==4.2.2
+pillow>=11.0.0git add requirements.txt
