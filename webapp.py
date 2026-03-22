@@ -38,17 +38,6 @@ section[data-testid="stSidebar"] {
     border-radius: 8px !important;
 }
 
-div[data-testid="stMetric"] {
-    background-color: #f7f9fc;
-    border: 1px solid #e3e8ef;
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-.stAlert {
-    border-radius: 8px !important;
-}
-
 h2, h3 {
     font-weight: 400 !important;
     color: #0a2540 !important;
@@ -66,7 +55,7 @@ with st.sidebar:
     st.header("Mission Settings")
 
     environment = st.radio(
-        "Environment",
+        "Select Environment",
         options=["freshwater", "marine"],
         format_func=lambda x: "Freshwater" if x == "freshwater" else "Marine"
     )
@@ -83,20 +72,23 @@ with st.sidebar:
 # ── Main Panel ──────────────────────────────────────────────────────
 
 if uploaded_file is None:
-    st.info("Upload a drone CSV file in the sidebar to begin analysis.")
+    st.info("Upload a CSV file in the sidebar to begin analysis.")
     st.stop()
 
+# initialize baseline variables
 baseline_temp = None
 station_name = None
 
+# fetch NOAA baseline for marine mode using manually entered coordinates
 if environment == "marine":
     with st.spinner("Fetching baseline from NOAA..."):
         station_name, baseline_temp = get_baseline_for_location(manual_lat, manual_lon)
     if baseline_temp:
         st.sidebar.success(f"Baseline: {baseline_temp}°C — {station_name}")
     else:
-        st.sidebar.warning("Could not fetch NOAA baseline.")
+        st.sidebar.warning("Could not fetch baseline.")
 
+# load and analyze
 df = load_flight_data(uploaded_file)
 df = analyze_csv(df, environment, baseline_temp)
 
@@ -109,14 +101,16 @@ m3.metric("Max Surface Temp", f"{df['water_surface_temp_c'].max():.1f} °C")
 m4.metric("Environment", environment.capitalize())
 st.markdown("---")
 
-# ── Results ──────────────────────────────────────────────────────────
+st.success(f"{len(df)} readings analyzed — {environment} mode")
+
+# ── Results ─────────────────────────────────────────────────────────
 
 if environment == "freshwater":
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Fish Kill Risk")
         st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
-                          "fish_kill_status"]], use_container_width=True)
+                        "fish_kill_status"]], use_container_width=True)
     with col2:
         st.subheader("Algal Bloom Risk")
         st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
@@ -127,16 +121,20 @@ elif environment == "marine":
     with col1:
         st.subheader("Coral Bleaching Risk")
         st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
-                          "coral_bleaching_status"]], use_container_width=True)
+                        "coral_bleaching_status"]], use_container_width=True)
     with col2:
         st.subheader("Algal Bloom Risk")
         st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
                           "algal_bloom_status"]], use_container_width=True)
 
-# ── Gemini Report ─────────────────────────────────────────────────────
-# st.markdown("---")
-# st.subheader("AI Ecosystem Risk Report")
-# with st.spinner("Generating report..."):
-#     report = generate_risk_report(df=df, environment=environment,
-#                                   station_name=station_name, baseline_temp=baseline_temp)
-# st.markdown(report)
+# ── Gemini Report ────────────────────────────────────────────────────
+#st.divider()
+#st.subheader("AI Ecosystem Risk Report")
+#with st.spinner("Generating report..."):
+#    report = generate_risk_report(
+#        df=df,
+#        environment=environment,
+#        station_name=station_name,
+#        baseline_temp=baseline_temp
+#    )
+#st.markdown(report)
