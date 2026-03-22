@@ -106,14 +106,17 @@ def normalize_columns(df):
     for col in df.columns:
         col_lower = col.lower().strip()
 
-        if "temp" in col_lower or "air temperature" in col_lower:
-            if "temperature_c" not in df.columns:
-                renamed[col] = "temperature_c"
+        # skip quality flag columns
+        if "quality" in col_lower or "flag" in col_lower:
+            continue
 
-        elif any(x in col_lower for x in ["alt", "height", "elev"]) and "altitude_m" not in df.columns:
+        if ("temp" in col_lower or "air temperature" in col_lower) and "temperature_c" not in renamed.values() and "temperature_c" not in df.columns:
+            renamed[col] = "temperature_c"
+
+        if any(x in col_lower for x in ["alt", "height", "elev"]) and "altitude_m" not in renamed.values() and "altitude_m" not in df.columns:
             renamed[col] = "altitude_m"
 
-        elif any(x in col_lower for x in ["time", "date", "stamp"]) and "timestamp" not in df.columns:
+        if any(x in col_lower for x in ["time", "date", "stamp"]) and "timestamp" not in renamed.values() and "timestamp" not in df.columns:
             renamed[col] = "timestamp"
 
     if renamed:
