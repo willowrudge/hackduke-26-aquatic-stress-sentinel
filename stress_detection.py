@@ -95,13 +95,36 @@ def analyze_csv(df, environment, baseline_temp=None):
 
 
 # ── CSV Ingestion ───────────────────────────────────────────────────
+def normalize_columns(df):
+    """
+    Automatically renames columns to match expected names
+    by detecting keywords in whatever column names the CSV has.
+    Works for any dataset regardless of naming convention.
+    """
+    renamed = {}
+
+    for col in df.columns:
+        col_lower = col.lower().strip()
+
+        if "temp" in col_lower and "temperature_c" not in df.columns:
+            renamed[col] = "temperature_c"
+
+        elif any(x in col_lower for x in ["alt", "height", "elev"]) and "altitude_m" not in df.columns:
+            renamed[col] = "altitude_m"
+
+        elif any(x in col_lower for x in ["time", "date", "stamp"]) and "timestamp" not in df.columns:
+            renamed[col] = "timestamp"
+
+    if renamed:
+        print(f"Auto-renamed columns: {renamed}")
+        df = df.rename(columns=renamed)
+
+    return df
 
 def load_flight_data(csv_path):
-    """
-    Reads the drone CSV and validates expected columns exist.
-    Returns a clean dataframe ready for analysis.
-    """
     df = pd.read_csv(csv_path)
+
+    df = normalize_columns(df)
 
     required_columns = {"timestamp", "temperature_c", "altitude_m"}
     missing = required_columns - set(df.columns)
