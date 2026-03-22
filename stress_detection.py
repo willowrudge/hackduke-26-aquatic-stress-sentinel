@@ -123,10 +123,13 @@ def normalize_columns(df):
     return df
 
 def load_flight_data(csv_path):
+    # skip comment lines starting with %
     df = pd.read_csv(csv_path, comment="%")
 
+    # auto-normalize column names
     df = normalize_columns(df)
 
+    # if no altitude column, default to 1 meter
     if "altitude_m" not in df.columns:
         df["altitude_m"] = 1.0
 
@@ -136,6 +139,10 @@ def load_flight_data(csv_path):
     if missing:
         raise ValueError(f"CSV is missing required columns: {missing}")
 
+    # force numeric conversion — drops any rows with non-numeric temp values
+    df["temperature_c"] = pd.to_numeric(df["temperature_c"], errors="coerce")
+    df["altitude_m"] = pd.to_numeric(df["altitude_m"], errors="coerce")
+
     df = df.dropna(subset=["temperature_c"])
 
     df["water_surface_temp_c"] = df.apply(
@@ -144,4 +151,3 @@ def load_flight_data(csv_path):
     )
 
     return df
-
