@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from stress_detection import load_flight_data, analyze_csv
 from baseline import get_baseline_for_location
+from gemini_report import generate_risk_report
 
 st.set_page_config(page_title="Aquatic Stress Sentinel", page_icon="🌊", layout="wide")
 
@@ -77,3 +78,17 @@ elif environment == "marine":
         st.subheader("Algal Bloom Risk")
         st.dataframe(df[["timestamp", "lat", "lon", "water_surface_temp_c",
                           "algal_bloom_status"]])
+# ── Gemini Report ────────────────────────────────────────────────────
+
+#st.divider()
+#st.subheader("AI Ecosystem Risk Report")
+
+#with st.spinner("Generating report..."):
+#    report = generate_risk_report(
+#        df=df,
+#        environment=environment,
+#        station_name=station_name,
+#        baseline_temp=baseline_temp
+#    )
+
+#st.markdown(report)
