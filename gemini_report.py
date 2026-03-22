@@ -5,7 +5,7 @@ def generate_risk_report(df, environment, station_name=None, baseline_temp=None)
     Takes the analyzed dataframe and generates a plain-language
     ecosys risk report using the Gemini API.
     """
-    genai.configure(api_key="AIzaSyA8ylNhuMh-M_AQAhMfXMyPNa3R8U4qTk8")
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     model = genai.GenerativeModel("gemini-2.0-flash")
 
     # summarize the data to keep the prompt concise
