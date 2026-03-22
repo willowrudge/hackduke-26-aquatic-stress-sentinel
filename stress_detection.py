@@ -106,8 +106,9 @@ def normalize_columns(df):
     for col in df.columns:
         col_lower = col.lower().strip()
 
-        if "temp" in col_lower and "temperature_c" not in df.columns:
-            renamed[col] = "temperature_c"
+        if "temp" in col_lower or "air temperature" in col_lower:
+            if "temperature_c" not in df.columns:
+                renamed[col] = "temperature_c"
 
         elif any(x in col_lower for x in ["alt", "height", "elev"]) and "altitude_m" not in df.columns:
             renamed[col] = "altitude_m"
@@ -122,11 +123,14 @@ def normalize_columns(df):
     return df
 
 def load_flight_data(csv_path):
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path, comment="%")
 
     df = normalize_columns(df)
 
-    required_columns = {"timestamp", "temperature_c", "altitude_m"}
+    if "altitude_m" not in df.columns:
+        df["altitude_m"] = 1.0
+
+    required_columns = {"timestamp", "temperature_c"}
     missing = required_columns - set(df.columns)
 
     if missing:
