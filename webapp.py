@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from stress_detection import load_flight_data, analyze_csv
 from baseline import get_baseline_for_location
-from gemini_report import generate_risk_report
+#from gemini_report import generate_risk_report
 
 st.set_page_config(page_title="Aquatic Stress Sentinel", page_icon="🌊", layout="wide")
 
