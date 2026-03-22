@@ -1,4 +1,6 @@
 import google.generativeai as genai
+import streamlit as st
+
 
 def generate_risk_report(df, environment, station_name=None, baseline_temp=None):
     """
