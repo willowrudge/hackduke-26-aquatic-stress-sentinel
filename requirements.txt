@@ -3,4 +3,4 @@ requests
 streamlit
 folium
 streamlit-folium
-pillow>=11.0.0git add requirements.txt
+pillow>=11.0.0
