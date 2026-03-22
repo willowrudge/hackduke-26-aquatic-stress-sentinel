@@ -1,4 +1,5 @@
 ## 🌊 Aquatic Stress Sentinel
+https://hackduke-26-aquatic-stress-sentinel-gd9mf5wu85dcvt5nn4lv8a.streamlit.app/
 Aquatic Stress Sentinel, a drone-based microclimate sensing system for early detection of aquatic ecosystem stress.
 
 ## Description
@@ -21,7 +22,7 @@ Detected stressors include:
 
 1. Clone the repository:
 ```bash
-git clone https://coursework.cs.duke.edu/wjr20/hackduke-2026.git
+git clone https://github.com/willowrudge/hackduke-26-aquatic-stress-sentinel.git
 cd hackduke-2026
 ```
 
@@ -46,9 +47,9 @@ streamlit-folium
 ## Usage
 1. Place your drone's CSV flight log in the project folder. It should follow this format:
 ```csv
-timestamp,lat,lon,temperature_c,humidity_pct,altitude_m
-2026-03-22T09:15:01Z,36.0014,-78.9382,21.8,68.4,1.0
-2026-03-22T09:15:06Z,36.0018,-78.9379,22.1,69.2,1.0
+timestamp,temperature_c,humidity_pct,altitude_m
+2026-03-22T09:15:01Z,21.8,68.4,1.0
+2026-03-22T09:15:06Z,22.1,69.2,1.0
 ```
 
 2. Run the Streamlit dashboard:
