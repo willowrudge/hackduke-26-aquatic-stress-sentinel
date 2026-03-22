@@ -22,6 +22,12 @@ with st.sidebar:
 
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
+    if environment == "marine":
+        st.subheader("Flight Location")
+        st.caption("Enter the coordinates of where the drone flew so we can find the nearest NOAA station.")
+        manual_lat = st.number_input("Latitude", value=24.71, format="%.4f")
+        manual_lon = st.number_input("Longitude", value=-81.10, format="%.4f")
+
 # ── Main Panel ──────────────────────────────────────────────────────
 
 if uploaded_file is None:
@@ -32,18 +38,14 @@ if uploaded_file is None:
 baseline_temp = None
 station_name = None
 
-# fetch NOAA baseline for marine mode
+# fetch NOAA baseline for marine mode using manually entered coordinates
 if environment == "marine":
-    df_preview = pd.read_csv(uploaded_file)
-    avg_lat = df_preview["lat"].mean()
-    avg_lon = df_preview["lon"].mean()
     with st.spinner("Fetching baseline from NOAA..."):
-        station_name, baseline_temp = get_baseline_for_location(avg_lat, avg_lon)
+        station_name, baseline_temp = get_baseline_for_location(manual_lat, manual_lon)
     if baseline_temp:
         st.sidebar.success(f"Baseline: {baseline_temp}°C ({station_name})")
     else:
         st.sidebar.warning("Could not fetch baseline.")
-    uploaded_file.seek(0)
 
 # load and analyze
 df = load_flight_data(uploaded_file)
@@ -58,12 +60,12 @@ if environment == "freshwater":
 
     with col1:
         st.subheader("Fish Kill Risk")
-        st.dataframe(df[["timestamp", "lat", "lon", "water_surface_temp_c",
+        st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
                         "fish_kill_status"]])
 
     with col2:
         st.subheader("Algal Bloom Risk")
-        st.dataframe(df[["timestamp", "lat", "lon", "water_surface_temp_c",
+        st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
                           "algal_bloom_status"]])
 
 elif environment == "marine":
@@ -71,13 +73,14 @@ elif environment == "marine":
 
     with col1:
         st.subheader("Coral Bleaching Risk")
-        st.dataframe(df[["timestamp", "lat", "lon", "water_surface_temp_c",
+        st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
                         "coral_bleaching_status"]])
 
     with col2:
         st.subheader("Algal Bloom Risk")
-        st.dataframe(df[["timestamp", "lat", "lon", "water_surface_temp_c",
+        st.dataframe(df[["timestamp", "temperature_c", "water_surface_temp_c",
                           "algal_bloom_status"]])
+
 # ── Gemini Report ────────────────────────────────────────────────────
 
 #st.divider()

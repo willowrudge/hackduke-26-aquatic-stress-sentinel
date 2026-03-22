@@ -103,7 +103,7 @@ def load_flight_data(csv_path):
     """
     df = pd.read_csv(csv_path)
 
-    required_columns = {"timestamp", "lat", "lon", "temperature_c"}
+    required_columns = {"timestamp", "temperature_c", "altitude_m"}
     missing = required_columns - set(df.columns)
 
     if missing:
@@ -112,9 +112,9 @@ def load_flight_data(csv_path):
     df = df.dropna(subset=["temperature_c"])
 
     df["water_surface_temp_c"] = df.apply(
-    lambda row: estimate_water_surface_temp(
-        row["temperature_c"], row["altitude_m"]), axis=1
-)
+        lambda row: estimate_water_surface_temp(
+            row["temperature_c"], row["altitude_m"]), axis=1
+    )
 
     return df
 
